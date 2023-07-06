@@ -1,0 +1,11 @@
+##TITLE= Parameter file, TopSpin 3.5 pl 6
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 11	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= joze
+$$ 2021-11-29 09:29:11.588 +0100  joze@zeeman
+$$ /opt/topspin/data/joze/nmr/241121_FUS/12/pdata/1/assocs
+$$ process /opt/topspin3.5pl6/prog/mod/dataserver
+##$MULTDISP= </opt/topspin/data/joze/nmr/241121_FUS/123/pdata/1>
+##END=

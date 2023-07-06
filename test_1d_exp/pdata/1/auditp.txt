@@ -1,0 +1,23 @@
+##TITLE= Audit trail, TopSpin 3.6.4
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= ettor
+$$ C:/Users/ettor/Desktop/PhD/Data/NMR/JOZE_241121/241121_FUS_1/12/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2021-11-24 13:12:58.009 +0100>,<joze>,<zeeman>,<go4>,<TopSpin 3.5.6>,
+      <created by zg
+	started at 2021-11-24 12:36:26.542 +0100,
+	POWCHK disabled, PULCHK disabled,
+       configuration hash MD5:
+       6C 18 CA 68 47 3B AF 3E C3 43 C8 AD 24 9B CB B5
+       data hash MD5: 16K
+       20 98 80 18 19 F4 39 FE CD 96 53 6D 11 5C 5A 3B>)
+(   2,<2022-01-12 17:24:13.171 +0100>,<ettor>,<LAPTOP-V6LOQI8V>,<proc1d>,<TopSpin 3.6.4>,
+      <Start of raw data processing
+       fp FT_mod = 6 PKNL = 1 PHC0 = 117.6246 PHC1 = -179.1054 SI = 32K 
+       data hash MD5: 32K
+       17 0A B0 7F EB 81 B1 4F 95 E3 F1 02 91 7E 30 CE>)
+##END=
+
+$$ hash MD5
+$$ 1F AD CD 29 FA 9C 6F FD 68 94 73 D5 1B C8 F4 F7
