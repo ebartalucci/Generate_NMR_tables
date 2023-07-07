@@ -1,2 +1,2 @@
 $parameters acqu
-$path C:\Users\ettor\Desktop\work_July\temp_generate_nmr_structures
+$path D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs
