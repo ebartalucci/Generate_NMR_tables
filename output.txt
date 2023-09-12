@@ -1,3 +1,0 @@
-File: acqu
-Location: D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs\test_1d_exp\acqu
-

@@ -1,2 +1,2 @@
 $parameters acqu
-$path D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs
+$path D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs\test_1d_exp
