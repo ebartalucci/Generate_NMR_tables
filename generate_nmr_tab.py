@@ -1,11 +1,11 @@
 ##########################################################################
 #  FETCH AND PLOT NMR ACQUISITION AND PROCESSING PARAMETERS FOR BRUKER   #
 #                          ------------------                            #
-#                          v.0.1 / 31.08.23                              #
+#                          v.0.2 / 15.11.23                              #
 #                          ETTORE BARTALUCCI                             #
 ##########################################################################
 
-# Importing necessary modules
+# Importing minimally necessary modules
 import os
 import sys
 
@@ -18,16 +18,17 @@ import sys
 def search_files(input_file, settings_file):
     """
     This function opens the provided input and setting files and perform a keyword search for parameter extraction
-    input_file: here specify $parameters as the list of parameter files to search for the values and the $path where to search 
-    settings_file: list of experiment-related keywords to search (DO NOT CHANGE!!!)
+    - input_file: here specify $parameters as the list of parameter files to search for the values and the $path where to search 
+    - settings_file: list of experiment-related keywords to search (DO NOT CHANGE!!!)
     """
 
     # Get the absolute path of the input file
     input_path = os.path.abspath(input_file)
+
     # Get the directory path of the input file
     input_dir = os.path.dirname(input_path)
 
-    # open input file and search for keywords
+    # Open input file and search for keywords
     with open(input_file, 'r') as file:
         lines = file.readlines()
 
@@ -37,28 +38,32 @@ def search_files(input_file, settings_file):
     for line in lines:
         if line.startswith('$parameters'): # this searches for the specified Bruker parameter file(s)
             parameters = line.strip().split()[1:]
-        elif line.startswith('$path'): # this searches for those files in the given path
+        elif line.startswith('$path'): # this searches for those files in the specified path
             parts = line.strip().split()
             if len(parts) >= 2:
                 path = os.path.join(input_dir, parts[1])
 
     # Error handling for missing keywords in input file
-    error_log = 'error_log_file.txt'
+    error_log_folder = 'logs'
+    os.makedirs(error_log_folder, exist_ok=True) # create dir if its not existing already
+
+    error_log = os.path.join(error_log_folder, 'error_log_file.txt')
 
     if not parameters: # error if no parameter is specified
         with open(error_log, 'w') as file:
             file.write("Error: Invalid input file format, no parameter has been specified!\n")
-        print('An error occurred, please check the error log file!')
+        print('An error occurred, please check the error log file in "logs\error_log_file.txt"!')
         return
     elif not path: # error if no path is specified
         with open(error_log, 'w') as file:
             file.write("Error: Invalid input file format, no path has been given!\n")
-        print('An error occurred, please check the error log file!')
+        print('An error occurred, please check the error log file in "logs\error_log_file.txt"!')
         return
 
     
     # Check if the specified parameters or path exist, return error otherwise
-    available_parameters = ['acqu', 'acqus', 'audita.txt', 'pulseprogram', 'uxnmr.info']  # List of available parameters that do not give an error
+    # List of available parameters that do not give an error
+    available_parameters = ['acqu', 'acqus', 'audita.txt', 'pulseprogram', 'uxnmr.info']  # modyfy ONLY if familiar with Bruker syntax
     if not set(parameters).issubset(set(available_parameters)):
         with open(error_log, 'w') as file:
             file.write('Error: Invalid input file format, the specified parameters do not exist!\n')
