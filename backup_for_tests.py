@@ -75,15 +75,8 @@ def search_files(input_file, settings_file):
             file.write('Error: Invalid input file format, the specified path does not exist!\n')
         print('An error occurred, please check the error log file in "logs\error_log_file.txt"!')
         return
+    # ----- until here all fine ----- 
 
-    # Call for a parameter search
-    parameter_setting(parameters, path, settings_file)
-
-#--------------------------------------------------------------------------------------------------------------------------------#
-# SECTION 2: FILE SEARCH AND VALUE EXTRACTION - WRITING EXTRACTED VALUES TO FILES AND CLOSE
-
-# 
-def parameter_setting(parameters, path, settings_file):
     # Initialize empty vars for storage
     output = [] # stores info on the location for the specified parameter files
     parameter_values = {} # stores info on the parameter values specified in the setting file, this is the important one

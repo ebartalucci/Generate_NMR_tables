@@ -13,6 +13,7 @@
 - parse over all experiments in the folder, extract exp type info and sort based on exp type on the settings file. If exp type absent, use default acq param and then its a problem of the user
 - implement processing fetching in a similar fashion
 - write a function that clears the log files after each run
+- nmr function code
 ## Style and appearance
 
 
