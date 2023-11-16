@@ -1,3 +1,0 @@
-File(s): acqu
-Location(s): C:\Users\ettor\Desktop\Programming_for_NMR_spectroscopists\generate_nmr_tables\Generate_NMR_tables\test_1d_exp\acqu
-

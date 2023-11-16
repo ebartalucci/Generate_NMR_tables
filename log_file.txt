@@ -1,4 +1,0 @@
-Parameters location file 'parameters.txt' generated successfully!
-Parameters output values file 'parameters_output_values.txt' generated successfully!
-Congratulations the parameters values have been successfully written to file
-STEP 1 COMPLETE SUCCESFULLY - A wizard is never late, nor is he ealy. He arrives precisely when he means to!

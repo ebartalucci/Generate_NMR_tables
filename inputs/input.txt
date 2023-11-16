@@ -1,0 +1,2 @@
+$parameters acqu acqus audita.txt
+$path D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs\test_1d_exp

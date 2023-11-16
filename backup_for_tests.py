@@ -11,11 +11,15 @@ import sys
 
 # Importing my functions
 
-#--------------------------------------------------------------------------------------------------------------------------------#
-# SECTION 1: FILE SEARCH AND VALUE EXTRACTION - WRITING EXTRACTED VALUES TO FILES AND CLOSE
+#------------------------------------------------------------------------#
+# ACQUISITION FILES SECTION - GENERATE TABLES FROM ACQUISITION PARAMETERS
+#------------------------------------------------------------------------#
 
-# Searching for parameter files and writing to output
-def search_files(input_file, settings_file):
+#--------------------------------------------------------------------------------------------------------------------------------#
+# SECTION 1: INPUT FILE SEARCH AND EXTRACTION OF KEYWORDS
+
+# Searching for keywords in input file for parameter search
+def search_input_file(input_file, settings_file):
     """
     This function opens the provided input and setting files and perform a keyword search for parameter extraction
     - input_file: here specify $parameters as the list of parameter files to search for the values and the $path where to search 
@@ -52,12 +56,12 @@ def search_files(input_file, settings_file):
     if not parameters: # error if no parameter is specified
         with open(error_log, 'w') as file:
             file.write("Error: Invalid input file format, no parameter has been specified!\n")
-        print('An error occurred, please check the error log file in "logs\error_log_file.txt"!')
+        print(r'An error occurred, please check the error log file in "logs\error_log_file.txt"!')
         return
     elif not path: # error if no path is specified
         with open(error_log, 'w') as file:
             file.write("Error: Invalid input file format, no path has been given!\n")
-        print('An error occurred, please check the error log file in "logs\error_log_file.txt"!')
+        print(r'An error occurred, please check the error log file in "logs\error_log_file.txt"!')
         return
 
     
@@ -68,68 +72,124 @@ def search_files(input_file, settings_file):
     if not set(parameters).issubset(set(available_parameters)):
         with open(error_log, 'w') as file:
             file.write('Error: Invalid input file format, the specified parameters do not exist!\n')
-        print('An error occurred, please check the error log file in "logs\error_log_file.txt"!')
+        print(r'An error occurred, please check the error log file in "logs\error_log_file.txt"!')
         return
     elif not os.path.exists(path):
         with open(error_log, 'w') as file:
             file.write('Error: Invalid input file format, the specified path does not exist!\n')
-        print('An error occurred, please check the error log file in "logs\error_log_file.txt"!')
+        print(r'An error occurred, please check the error log file in "logs\error_log_file.txt"!')
         return
-    # ----- until here all fine ----- 
+    
+    print('Section 1 in generate_nmr_tab.py compiled successfully - input file has been read')
 
+    # Call for a parameter search based on settings keywords
+    search_settings_file(parameters, path, settings_file)
+#--------------------------------------------------------------------------------------------------------------------------------#
+
+#--------------------------------------------------------------------------------------------------------------------------------#
+# SECTION 2: SETTINGS FILE SEARCH AND EXTRACTION OF KEYWORDS - WRITING TO PARAMETER FILE
+
+# Searching for keywords in settings file for defining pulse program parameters
+def search_settings_file(parameters, path, settings_file):
+    
     # Initialize empty vars for storage
-    output = [] # stores info on the location for the specified parameter files
-    parameter_values = {} # stores info on the parameter values specified in the setting file, this is the important one
+    parameters_location = [] # stores info on the location for all the specified files in the parameter variable from the input file
+    parameter_values = {} # stores info on the parameter values extracted from the keywords specified in the setting file, IMPORTANT
     settings_keywords = [] # empty list for settings keyword for Bruker parameter subsearch
 
     # Search for keywords within the files
     if settings_file:
+        # Read settings keywords from settings file
         with open(settings_file, 'r') as file:
             settings_keywords = [line.strip() for line in file.readlines() if line.strip().startswith('##$')]
-        # need to do here is to extend search and subsearch to multiple lines, basically it should print everything between the keyword
-        # and the next ##$ parameter so that i can create a dictionary and later parse from that dictionary whatever i want. Need to drop
-        # unwanted values.
+        
+        # Iterate through files in the specified path
         for root, _, files in os.walk(path):
             for file_name in files:
-                if file_name in parameters:
+                if file_name in parameters:  # here writes the location of the various $parameter to a file if found in $path
                     file_path = os.path.join(root, file_name)
-                    output.append((file_name, file_path))
-                    with open(file_path, 'r') as file:
+                    parameters_location.append((file_name, file_path))  
+                    with open(file_path, 'r') as file:  # open each specified $parameter file in $path and extract $settings keywords
                         file_content = file.readlines()
-                        for line in file_content:
-                            for keyword in settings_keywords:
-                                if line.startswith(keyword):
-                                    value = line.split('=')[1].strip()
+                        # search for each keyword in my settings.txt file
+                        for keyword in settings_keywords:
+                            keyword_lines = []
+                            in_keyword_block = False
+                            # Search for matching keyword in parameter file, remember the keywords start with '##$'
+                            for line in file_content:
+                                if line.startswith(f"{keyword}="):
+                                    if in_keyword_block:
+                                        # If already inside a block, append the current block and start a new one
+                                        if keyword not in parameter_values:
+                                            parameter_values[keyword] = []
+                                        parameter_values[keyword].append('\n'.join(keyword_lines))
+                                    in_keyword_block = True
+                                    keyword_lines = [line.strip().split('=', 1)[1].strip()]  # Include the value after '='
+
+                                elif in_keyword_block and line.startswith('##$'):
+                                    in_keyword_block = False
+                                    # Store the parameter values in a dictionary
                                     if keyword not in parameter_values:
                                         parameter_values[keyword] = []
-                                    parameter_values[keyword].append(value)
+                                    parameter_values[keyword].append('\n'.join(keyword_lines))
 
+                                elif in_keyword_block:
+                                    keyword_lines.append(line.strip())
+
+                            # Check if the last keyword block extends to the end of the file
+                            if in_keyword_block:
+                                parameter_values[keyword].append('\n'.join(keyword_lines))
 
     # Save and write to files
-    parameters_file = 'parameters.txt'
-    output_values_file = 'parameters_output_values.txt'
-    logs_file = 'log_file.txt'
+    # parameters file
+    parameter_folder = 'outputs'
+    os.makedirs(parameter_folder, exist_ok=True)
+    parameters_file = os.path.join(parameter_folder, 'parameters.txt')
+
+    # output file
+    output_values_folder = 'outputs'
+    os.makedirs(output_values_folder, exist_ok=True)
+    output_values_file = os.path.join(output_values_folder, 'parameters_output_values.txt')
+
+    # log file
+    logs_folder = 'logs'
+    os.makedirs(logs_folder, exist_ok=True) # create dir if its not existing already
+    logs_file = os.path.join(logs_folder, 'log_file.txt')
 
     with open(parameters_file, 'w') as file:
-        for file_name, file_path in output:
+        for file_name, file_path in parameters_location:
             file.write(f"File(s): {file_name}\nLocation(s): {file_path}\n\n")
 
     with open(output_values_file, 'w') as file:
-        for keyword, values in parameter_values.items():
-            file.write(f"{keyword}:\n")
-            for value in values:
-                file.write(f"- {value}\n")
+        # give a title saying from which file these parameters have been extracted
+        for file_name in parameters_location:
+            file.write(f'#######################################\n')
+            file.write(f'Parameters extracted from: {file_name} \n')
+            file.write(f'#######################################\n')
+            # for each file, print the extracted parameters
+            for keyword, values in parameter_values.items():
+                file.write(f"{keyword}:\n")
+                for value in values:
+                    file.write(f"{value}\n")
+                file.write(f'\n') # make a space between each keyword
 
     with open(logs_file, 'w') as file:
+        file.write(f'##########################################################################################################\n')
+        file.write('STEP 1 COMPLETE SUCCESFULLY - A wizard is never late, nor is he ealy. He arrives precisely when he means to!\n')
         file.write(f"Parameters location file '{parameters_file}' generated successfully!\n")
         file.write(f"Parameters output values file '{output_values_file}' generated successfully!\n")
         file.write('Congratulations the parameters values have been successfully written to file\n')
-        file.write('STEP 1 COMPLETE SUCCESFULLY - A wizard is never late, nor is he ealy. He arrives precisely when he means to!\n')
+        file.write(f'Now go to next step!\n')
+        file.write(f'##########################################################################################################\n')
+        file.write(f'\n') 
+
+    
+    print('Section 2 in generate_nmr_tab.py compiled successfully - settings keywords have been read')
 #--------------------------------------------------------------------------------------------------------------------------------#
 
 
 #--------------------------------------------------------------------------------------------------------------------------------#
-# SECTION 2: PARSE BY PULPROG VALUE
+# SECTION 3: PARSE BY PULPROG VALUE
 
 def pulprog_sorter(output_values_file):
     """
@@ -141,7 +201,7 @@ def pulprog_sorter(output_values_file):
     # Search for ##$PULPROG keyword in the outputted parameter values
     with open(output_values_file, 'r') as file:
         pulprog_keyword = [line.strip() for line in file.readlines() if line.strip().startswith('##$PULPROG')]
-        print(pulprog_keyword)
+        #print(pulprog_keyword)
         return
     
     # Search for ##$PULPROG keyword in setting file
@@ -158,7 +218,32 @@ def pulprog_sorter(output_values_file):
 #--------------------------------------------------------------------------------------------------------------------------------#
 
 
-# Example usage
-search_files('input.txt', 'settings.txt')
-pulprog_sorter('parameters_output_values.txt')
+
+
+
+
+#------------------------------------------------------------------------#
+# PROCESSING FILES SECTION - GENERATE TABLES FROM PROCESSING PARAMETERS
+#------------------------------------------------------------------------#
+
+
+
+
+
+# Main function
+def main():
+
+    # Search parameters and keywords 
+    current_working_dir = os.getcwd()
+    input_file = os.path.join(current_working_dir, 'inputs\input.txt')
+    settings_file = os.path.join(current_working_dir, 'settings\settings.txt')
+    search_input_file(input_file, settings_file)
+
+    # Sort parameters based on pulse program(s)
+    parameter_output_values = os.path.join(current_working_dir, 'outputs\parameters_output_values.txt')
+    pulprog_sorter(parameter_output_values)
+
+
+if __name__ == "__main__":
+    main()
 

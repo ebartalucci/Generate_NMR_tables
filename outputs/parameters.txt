@@ -1,0 +1,9 @@
+File(s): acqu
+Location(s): D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs\test_1d_exp\acqu
+
+File(s): acqus
+Location(s): D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs\test_1d_exp\acqus
+
+File(s): audita.txt
+Location(s): D:\PhD\Data\CODES\PYTHON\Generate_NMR_tabs\test_1d_exp\audita.txt
+
