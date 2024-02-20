@@ -1,8 +1,1 @@
-##########################################################################################################
-STEP 1 COMPLETE SUCCESFULLY - A wizard is never late, nor is he ealy. He arrives precisely when he means to!
-Parameters location file 'outputs\parameters.txt' generated successfully!
-Parameters output values file 'outputs\parameters_output_values.txt' generated successfully!
-Congratulations the parameters values have been successfully written to file
-Now go to next step!
-##########################################################################################################
-
+Files have been found in the following folders: [('C:\\Users\\ettor\\Desktop\\Generate_NMR_tables\\test_1d_exp\\acqus', 'acqus'), ('C:\\Users\\ettor\\Desktop\\Generate_NMR_tables\\test_1d_exp\\audita.txt', 'audita.txt'), ('C:\\Users\\ettor\\Desktop\\Generate_NMR_tables\\test_1d_exp\\pdata\\1\\title', 'title')]

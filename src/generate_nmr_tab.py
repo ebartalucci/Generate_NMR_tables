@@ -1,7 +1,7 @@
 ##########################################################################
 #  FETCH AND PLOT NMR ACQUISITION AND PROCESSING PARAMETERS FOR BRUKER   #
 #                          ------------------                            #
-#                          v.0.2 / 15.11.23                              #
+#                          v.0.3 / 20.02.24                              #
 #                          ETTORE BARTALUCCI                             #
 ##########################################################################
 
@@ -9,14 +9,10 @@
 import os
 import sys
 
-# Importing my functions
 
-#------------------------------------------------------------------------#
-# ACQUISITION FILES SECTION - GENERATE TABLES FROM ACQUISITION PARAMETERS
-#------------------------------------------------------------------------#
-
-#--------------------------------------------------------------------------------------------------------------------------------#
+#---------------------------------------------------------#
 # SECTION 1: INPUT FILE SEARCH AND EXTRACTION OF KEYWORDS
+#---------------------------------------------------------#
 
 # Searching for keywords in input file for parameter search
 def search_input_file(input_file, settings_file):
